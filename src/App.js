@@ -1,25 +1,49 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import Player from "./Player";
+import NewPlayer from "./NewPlayer";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+
+  state = {
+    players: [
+      {id: 1, pName: "Janne", score: 15},
+      {id: 2, pName: "Kalle", score: 3},
+      {id: 3, pName: "Pelle", score: 10},
+      {id: 4, pName: "Anna", score: 0}
+    ]
+  }
+
+  updateScore = (newScore, id) => {
+    const newState = this.state.players;
+    newState[id].score = newScore;
+    
+    this.setState({
+      players: newState
+    })
+  
+  }
+
+  saveNewPlayer = (newPlayer) => {
+    const newPlayerList = this.state.players;
+    newPlayerList.push(newPlayer);
+    this.setState({players: newPlayerList})
+  }
+
+  render() {
+
+    const playerList = this.state.players;
+    playerList.sort((a, b) => b.score - a.score);
+
+    return (
+      <div className="App">
+       <h1>Game score</h1>
+       {playerList.map((item, i) => 
+         <Player key={playerList[i].id} id={i} pName={playerList[i].pName} score={this.state.players[i].score} updateScore={this.updateScore} />
+        )}
+        <NewPlayer players={this.state.players} saveNewPlayer={this.saveNewPlayer}/>
+      </div>
+    );
+  } 
 }
 
 export default App;
